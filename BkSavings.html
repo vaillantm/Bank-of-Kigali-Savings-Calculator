@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank of Kigali - Simple Interest Calculator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f1419 0%, #1a2332 100%);
+      color: #e8eaed;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      padding: 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.05) 10px,
+        rgba(255, 255, 255, 0.05) 20px
+      );
+      animation: shimmer 20s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .bank-logo {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      color: rgba(255, 255, 255, 0.95);
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rate-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-section {
+      padding: 30px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #94a3b8;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px 18px;
+      background: rgba(51, 65, 85, 0.8);
+      border: 2px solid rgba(59, 130, 246, 0.3);
+      border-radius: 12px;
+      color: #e8eaed;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .deposits-section {
+      padding: 30px;
+      border-top: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      color: #3b82f6;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .deposit-card {
+      background: rgba(51, 65, 85, 0.6);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .deposit-card:hover {
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .deposit-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .info-item {
+      text-align: center;
+    }
+
+    .info-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #e8eaed;
+    }
+
+    .amount-value {
+      color: #3b82f6;
+    }
+
+    .interest-value {
+      color: #10b981;
+    }
+
+    .deposit-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-small {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-edit {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .btn-edit:hover {
+      background: rgba(251, 191, 36, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-delete:hover {
+      background: rgba(239, 68, 68, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .summary-section {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%);
+      padding: 30px;
+      border-top: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .summary-card {
+      background: rgba(51, 65, 85, 0.8);
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .summary-label {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-bottom: 10px;
+    }
+
+    .summary-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #3b82f6;
+    }
+
+    .total-amount {
+      color: #10b981;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #64748b;
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 10px;
+        border-radius: 15px;
+      }
+      
+      .deposit-info {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .bank-logo {
+        font-size: 2rem;
+      }
+      
+      .header h1 {
+        font-size: 1.4rem;
+      }
+    }
+
+    .currency {
+      color: #94a3b8;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="bank-logo">🏦 BANK OF KIGALI</div>
+      <h1>Simple Interest Calculator</h1>
+      <div class="rate-badge">📈 6% Annual Interest Rate</div>
+    </div>
+
+    <div class="form-section">
+      <div class="input-group">
+        <label for="depositDate">📅 Deposit Date</label>
+        <input type="date" id="depositDate" />
+      </div>
+      
+      <div class="input-group">
+        <label for="depositAmount">💰 Amount (RWF)</label>
+        <input type="number" id="depositAmount" placeholder="Enter deposit amount..." />
+      </div>
+      
+      <button class="btn-primary" onclick="addDeposit()">
+        ➕ Add Deposit
+      </button>
+    </div>
+
+    <div class="deposits-section">
+      <h2 class="section-title">📊 Your Deposits</h2>
+      <div id="depositList"></div>
+    </div>
+
+    <div class="summary-section">
+      <h2 class="section-title">💼 Portfolio Summary</h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-label">Total Interest Earned</div>
+          <div class="summary-value">
+            <span id="totalInterest">0</span>
+            <span class="currency">RWF</span>
+          </div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-label">Total Portfolio Value</div>
+          <div class="summary-value total-amount">
+            <span id="totalAmount">0</span>
+            <span class="currency">RWF</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const INTEREST_RATE = 0.06; // 6% per annum
+    const depositListElement = document.getElementById('depositList');
+    let deposits = [];
+
+    function calculateInterest(amount, date) {
+      const now = new Date();
+      const depositDate = new Date(date);
+      const timeDiff = now - depositDate;
+      const days = Math.max(0, timeDiff / (1000 * 3600 * 24));
+      const interest = amount * INTEREST_RATE * (days / 365);
+      return Math.max(0, interest);
+    }
+
+    function formatNumber(num) {
+      return new Intl.NumberFormat('en-RW').format(Math.round(num));
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-RW', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+    }
+
+    function renderDeposits() {
+      if (deposits.length === 0) {
+        depositListElement.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <p>No deposits yet. Add your first deposit to get started!</p>
+          </div>
+        `;
+        updateSummary(0, 0);
+        return;
+      }
+
+      let totalInterest = 0;
+      let totalAmount = 0;
+
+      depositListElement.innerHTML = '';
+
+      deposits.forEach((dep, index) => {
+        const interest = calculateInterest(dep.amount, dep.date);
+        totalInterest += interest;
+        totalAmount += Number(dep.amount) + interest;
+
+        const depositCard = document.createElement('div');
+        depositCard.className = 'deposit-card';
+        depositCard.innerHTML = `
+          <div class="deposit-info">
+            <div class="info-item">
+              <div class="info-label">Principal Amount</div>
+              <div class="info-value amount-value">${formatNumber(dep.amount)} RWF</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Deposit Date</div>
+              <div class="info-value">${formatDate(dep.date)}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Interest Earned</div>
+              <div class="info-value interest-value">+${formatNumber(interest)} RWF</div>
+            </div>
+          </div>
+          <div class="deposit-actions">
+            <button class="btn-small btn-edit" onclick="editDeposit(${index})">
+              ✏️ Edit
+            </button>
+            <button class="btn-small btn-delete" onclick="deleteDeposit(${index})">
+              🗑️ Delete
+            </button>
+          </div>
+        `;
+        depositListElement.appendChild(depositCard);
+      });
+
+      updateSummary(totalInterest, totalAmount);
+    }
+
+    function updateSummary(totalInterest, totalAmount) {
+      document.getElementById('totalInterest').textContent = formatNumber(totalInterest);
+      document.getElementById('totalAmount').textContent = formatNumber(totalAmount);
+    }
+
+    function addDeposit() {
+      const date = document.getElementById('depositDate').value;
+      const amount = document.getElementById('depositAmount').value;
+
+      if (!date) {
+        alert('⚠️ Please select a deposit date.');
+        return;
+      }
+
+      if (!amount || amount <= 0) {
+        alert('⚠️ Please enter a valid amount greater than 0.');
+        return;
+      }
+
+      const depositDate = new Date(date);
+      const today = new Date();
+      
+      if (depositDate > today) {
+        alert('⚠️ Deposit date cannot be in the future.');
+        return;
+      }
+
+      deposits.push({ 
+        date: date, 
+        amount: parseFloat(amount),
+        id: Date.now() // Simple ID for tracking
+      });
+
+      renderDeposits();
+      
+      // Clear form
+      document.getElementById('depositDate').value = '';
+      document.getElementById('depositAmount').value = '';
+      
+      // Show success feedback
+      const button = document.querySelector('.btn-primary');
+      const originalText = button.innerHTML;
+      button.innerHTML = '✅ Deposit Added!';
+      button.style.background = 'linear-gradient(135deg, #059669 0%, #10b981 100%)';
+      
+      setTimeout(() => {
+        button.innerHTML = originalText;
+        button.style.background = 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)';
+      }, 2000);
+    }
+
+    function deleteDeposit(index) {
+      if (confirm('🗑️ Are you sure you want to delete this deposit?')) {
+        deposits.splice(index, 1);
+        renderDeposits();
+      }
+    }
+
+    function editDeposit(index) {
+      const dep = deposits[index];
+      const newDate = prompt('📅 Edit deposit date (YYYY-MM-DD):', dep.date);
+      
+      if (newDate === null) return; // User cancelled
+      
+      const newAmount = prompt('💰 Edit amount (RWF):', dep.amount);
+      
+      if (newAmount === null) return; // User cancelled
+
+      // Validate inputs
+      if (!newDate || !newAmount || parseFloat(newAmount) <= 0) {
+        alert('⚠️ Please enter valid date and amount.');
+        return;
+      }
+
+      const editDate = new Date(newDate);
+      const today = new Date();
+      
+      if (editDate > today) {
+        alert('⚠️ Deposit date cannot be in the future.');
+        return;
+      }
+
+      deposits[index] = { 
+        date: newDate, 
+        amount: parseFloat(newAmount),
+        id: dep.id 
+      };
+      renderDeposits();
+    }
+
+    // Initialize the calculator
+    renderDeposits();
+
+    // Set today's date as default
+    document.getElementById('depositDate').valueAsDate = new Date();
+  </script>
+</body>
+</html>
