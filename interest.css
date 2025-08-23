@@ -1,0 +1,319 @@
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f1419 0%, #1a2332 100%);
+      color: #e8eaed;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      padding: 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.05) 10px,
+        rgba(255, 255, 255, 0.05) 20px
+      );
+      animation: shimmer 20s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .bank-logo {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      color: rgba(255, 255, 255, 0.95);
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rate-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-section {
+      padding: 30px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #94a3b8;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px 18px;
+      background: rgba(51, 65, 85, 0.8);
+      border: 2px solid rgba(59, 130, 246, 0.3);
+      border-radius: 12px;
+      color: #e8eaed;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .deposits-section {
+      padding: 30px;
+      border-top: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      color: #3b82f6;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .deposit-card {
+      background: rgba(51, 65, 85, 0.6);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .deposit-card:hover {
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .deposit-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .info-item {
+      text-align: center;
+    }
+
+    .info-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #e8eaed;
+    }
+
+    .amount-value {
+      color: #3b82f6;
+    }
+
+    .interest-value {
+      color: #10b981;
+    }
+
+    .deposit-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-small {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-edit {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .btn-edit:hover {
+      background: rgba(251, 191, 36, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-delete:hover {
+      background: rgba(239, 68, 68, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .summary-section {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%);
+      padding: 30px;
+      border-top: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .summary-card {
+      background: rgba(51, 65, 85, 0.8);
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .summary-label {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-bottom: 10px;
+    }
+
+    .summary-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #3b82f6;
+    }
+
+    .total-amount {
+      color: #10b981;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #64748b;
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 10px;
+        border-radius: 15px;
+      }
+      
+      .deposit-info {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .bank-logo {
+        font-size: 2rem;
+      }
+      
+      .header h1 {
+        font-size: 1.4rem;
+      }
+    }
+
+    .currency {
+      color: #94a3b8;
+      font-size: 0.9em;
+    }
+  </style>
