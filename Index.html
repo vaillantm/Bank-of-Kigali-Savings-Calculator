@@ -54,10 +54,7 @@
 
   <script>
     const INTEREST_RATE = 0.06; // 6% per annum
-    const depositListElement = document.getElementById('depositList');
-
-    // ✅ Load deposits from localStorage (or empty array)
-    let deposits = JSON.parse(localStorage.getItem("deposits")) || [];
+    let deposits = []; // will load later
 
     // ✅ Save helper
     function saveDeposits() {
@@ -69,8 +66,7 @@
       const depositDate = new Date(date);
       const timeDiff = now - depositDate;
       const days = Math.max(0, timeDiff / (1000 * 3600 * 24));
-      const interest = amount * INTEREST_RATE * (days / 365);
-      return Math.max(0, interest);
+      return amount * INTEREST_RATE * (days / 365);
     }
 
     function formatNumber(num) {
@@ -87,6 +83,7 @@
     }
 
     function renderDeposits() {
+      const depositListElement = document.getElementById('depositList');
       if (deposits.length === 0) {
         depositListElement.innerHTML = `
           <div class="empty-state">
@@ -105,7 +102,7 @@
       deposits.forEach((dep, index) => {
         const interest = calculateInterest(dep.amount, dep.date);
         totalInterest += interest;
-        totalAmount += Number(dep.amount) + interest;
+        totalAmount += dep.amount + interest;
 
         const depositCard = document.createElement('div');
         depositCard.className = 'deposit-card';
@@ -142,7 +139,7 @@
 
     function addDeposit() {
       const date = document.getElementById('depositDate').value;
-      const amount = document.getElementById('depositAmount').value;
+      const amount = parseFloat(document.getElementById('depositAmount').value);
 
       if (!date) {
         alert('Please select a deposit date.');
@@ -152,6 +149,7 @@
         alert('Please enter a valid amount greater than 0.');
         return;
       }
+
       const depositDate = new Date(date);
       const today = new Date();
       if (depositDate > today) {
@@ -161,26 +159,15 @@
 
       deposits.push({ 
         date: date, 
-        amount: parseFloat(amount),
+        amount: amount,
         id: Date.now()
       });
 
       saveDeposits(); // ✅ save
       renderDeposits();
 
-      // Clear form
       document.getElementById('depositDate').value = '';
       document.getElementById('depositAmount').value = '';
-
-      // Feedback
-      const button = document.querySelector('.btn-primary');
-      const originalText = button.innerHTML;
-      button.innerHTML = 'Deposit Added!';
-      button.style.background = 'linear-gradient(135deg, #059669 0%, #10b981 100%)';
-      setTimeout(() => {
-        button.innerHTML = originalText;
-        button.style.background = 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)';
-      }, 2000);
     }
 
     function deleteDeposit(index) {
@@ -203,6 +190,7 @@
         alert('Please enter valid date and amount.');
         return;
       }
+
       const editDate = new Date(newDate);
       const today = new Date();
       if (editDate > today) {
@@ -220,11 +208,15 @@
       renderDeposits();
     }
 
-    // ✅ Initialize with saved data
-    renderDeposits();
+    // ✅ Run everything after page loads
+    window.onload = function() {
+      // Load from localStorage
+      deposits = JSON.parse(localStorage.getItem("deposits")) || [];
+      renderDeposits();
 
-    // Set today as default deposit date
-    document.getElementById('depositDate').valueAsDate = new Date();
+      // Default today's date
+      document.getElementById('depositDate').valueAsDate = new Date();
+    };
   </script>
 </body>
 </html>
